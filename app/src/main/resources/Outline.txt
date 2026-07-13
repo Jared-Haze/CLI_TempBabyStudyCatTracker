@@ -1,0 +1,48 @@
+- Too much info/study cats to remember them all (immediately, within a shor time span).
+Make an optimized study cat cycle -> daily study following cycle & you'll shortly
+have everything memorized wihtout needing to remember each day what you did & didn't 
+study prior (keeps track for you, & tells you if you're good on a topic). 
+
+- This is just for reviewing Java, JavaFX, maybe Hibernate, & potentially SpringBoot. 
+The advanced multi-line syntax checker study will be made after JavaFX review is finished
+for GUI programs. 
+- This shouldn't be used for more than 3 weeks. 
+
+
+Study Cycle:
+- 12 practices total for - base finish study. 
+- max 3 per day count.
+- two day wait period after initially completing base finish study, you'll have one 
+more study practice for the final finish completion of the study cat (forced spaced rep).
+
+> you need something that'll make you come back, or something to where if you spend
+too long away from the cat's practice so that the system can better reflect & react to
+temporary quits.
+- If 3 days go by minus 1 study tick, and another minus for each day after that. Resets
+with each study tick added.
+
+
+
+<hero screen> displays study cat names (currently studying ones) and the study ticks next to them --> HashMap methods | 1 review/initial finish/completed
+    >all input study cats under 12 ticks
+    >study cats after two days of wait period from initial finish
+
+- <method> add new study cat to study cat cycle list (input study cat name).
+- <method> add study tick to a study cat (for each time you review it).
+- <method> remove study tick from a study cat (for accidental adds). 
+- <method> see completed study cats (all final completion ones).
+    - <method> to reset completed study cat (in case time goes by and you forgot it).
+
+
+- <entity> Study Cat: 
+    - String name; (duh)
+    - LocalDateTime studyStart; (just for myself, to see when I first started studying a study cat)
+    - int reviewTick; (main parameter for system)
+    - LocalDateTime lastReview; (to use for logic or removing ticks, should probably also show in hero screen so you know when a tick is about to be removed)
+    - LocalDateTime studyInitialFinish; (updates when revewTick hits 12, null before | for logic of two day spaced review after initial finish)
+    - LocalDateTime studyCompleted; 
+
+- misc logic
+    - after removing study ticks you have to set studyInitialFinish back to null
+    - reviewTick never goes above 13 (it just hits 12 for studyInitialFinish, then 13 for studyCompleted)
+    - if reviewTick is at 13 then it can't be altered unless reset. (completed study cats shouldn't be edited unless you reset the study of it)
