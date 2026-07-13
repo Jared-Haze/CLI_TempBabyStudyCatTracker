@@ -9,19 +9,6 @@ for GUI programs.
 - This shouldn't be used for more than 3 weeks. 
 
 
-Study Cycle:
-- 12 practices total for - base finish study. 
-- max 3 per day count.
-- two day wait period after initially completing base finish study, you'll have one 
-more study practice for the final finish completion of the study cat (forced spaced rep).
-
-> you need something that'll make you come back, or something to where if you spend
-too long away from the cat's practice so that the system can better reflect & react to
-temporary quits.
-- If 3 days go by minus 1 study tick, and another minus for each day after that. Resets
-with each study tick added.
-
-
 
 <hero screen> displays study cat names (currently studying ones) and the study ticks next to them --> HashMap methods | 1 review/initial finish/completed
     >all input study cats under 12 ticks
@@ -35,14 +22,27 @@ with each study tick added.
 
 
 - <entity> Study Cat: 
+    - int id;
     - String name; (duh)
     - LocalDateTime studyStart; (just for myself, to see when I first started studying a study cat)
     - int reviewTick; (main parameter for system)
     - LocalDateTime lastReview; (to use for logic or removing ticks, should probably also show in hero screen so you know when a tick is about to be removed)
     - LocalDateTime studyInitialFinish; (updates when revewTick hits 12, null before | for logic of two day spaced review after initial finish)
-    - LocalDateTime studyCompleted; 
+    - LocalDateTime studyCompleted; (just for myself, to see when I completed the study cat's cycle. Can use reviewTick == 13 to check for completion in logic)
 
-- misc logic
+- misc logic scripts
     - after removing study ticks you have to set studyInitialFinish back to null
     - reviewTick never goes above 13 (it just hits 12 for studyInitialFinish, then 13 for studyCompleted)
     - if reviewTick is at 13 then it can't be altered unless reset. (completed study cats shouldn't be edited unless you reset the study of it)
+
+    Study Cycle:
+- 12 practices total for - base finish study. 
+- max 3 per day count.
+- two day wait period after initially completing base finish study, you'll have one 
+more study practice for the final finish completion of the study cat (forced spaced rep).
+
+> you need something that'll make you come back, or something to where if you spend
+too long away from the cat's practice so that the system can better reflect & react to
+temporary quits.
+- If 3 days go by minus 1 study tick, and another minus for each day after that. Resets
+with each study tick added.
