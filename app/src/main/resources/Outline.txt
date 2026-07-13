@@ -10,7 +10,7 @@ for GUI programs.
 
 
 
-<hero screen> displays study cat names (currently studying ones) and the study ticks next to them --> HashMap methods | 1 review/initial finish/completed
+<hero screen> displays study cat names (currently studying ones) and the study ticks next to them --> HashMap methods | 1 review/initial finish/completed | last reviewed: 7/13/26
     >all input study cats under 12 ticks
     >study cats after two days of wait period from initial finish
 
