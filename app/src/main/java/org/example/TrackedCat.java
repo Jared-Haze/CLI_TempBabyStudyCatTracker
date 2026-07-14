@@ -23,9 +23,9 @@ public class TrackedCat {
 
     public String getTrackedCat() {
         String reviewStatus;
-        if(studyComplete == null){
+        if(studyComplete != null){
             reviewStatus = "completed";
-        } else if(initialFinish == null){
+        } else if(initialFinish != null){
             reviewStatus = "initial finish";
         } else {
             reviewStatus = String.valueOf(reviewTick);

@@ -3,9 +3,43 @@
  */
 package org.example;
 
+import java.util.ArrayList;
+import java.util.Scanner;
+
 public class App {
 
     public static void main(String[] args) {
-        System.out.println("teest, Hello Universe!");
+        
+        Scanner scanner = new Scanner(System.in);
+        boolean appRun = true;
+
+        while(appRun){
+            ArrayList<TrackedCat> allTrackedCats = DAL.getTrackedCats();
+
+            System.out.println("---Tracked--Study--Cats------------------------------------");
+
+            for(TrackedCat studyCat : allTrackedCats){
+                if(studyCat.reviewTick < 12){
+                    System.out.println(studyCat.getTrackedCat());
+                }
+            }
+            System.out.println("-----------------------------------------------------------\n");
+
+            System.out.println("enter 'A' to add new tracked study cat");
+            String heroChoice = scanner.nextLine();
+
+            switch (heroChoice.toUpperCase().strip()){
+                case "A" -> newTrackedCat(scanner);
+                default -> System.out.println("Invalid choice.\n");
+            }
+        }
+
+        scanner.close();
+    }
+
+    public static void newTrackedCat(Scanner scanner){
+        System.out.print("Enter the name of the newly tracked Study Cat: ");
+        String newTrackedCat = scanner.nextLine().strip();
+        DAL.addTrackedCat(newTrackedCat);
     }
 }

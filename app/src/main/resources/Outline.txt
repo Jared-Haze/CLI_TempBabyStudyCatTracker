@@ -1,4 +1,4 @@
-- Too much info/study cats to remember them all (immediately, within a shor time span).
+- Too much info/study cats to remember them all (immediately, within a short time span).
 Make an optimized study cat cycle -> daily study following cycle & you'll shortly
 have everything memorized wihtout needing to remember each day what you did & didn't 
 study prior (keeps track for you, & tells you if you're good on a topic). 
