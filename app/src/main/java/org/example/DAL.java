@@ -67,7 +67,35 @@ public class DAL {
                     break;
                 }
             }
-            System.out.println("study cat doesn't exist in database.");
+            System.out.println("that study cat doesn't exist in database.");
+        }catch(SQLException e){
+            e.printStackTrace();
+        }
+    }
+
+    public static void reviewedTrackedCat(String reviewedCat, Scanner scanner){
+        try(Connection conn = JDBC.getConnection()){
+            ArrayList<TrackedCat> allTrackedCats = getTrackedCats();
+            
+            
+            for(TrackedCat studyCat : allTrackedCats){
+                if(reviewedCat.equalsIgnoreCase(studyCat.studyCat)){
+                    PreparedStatement ps = conn.prepareStatement("UPDATE CatTracker SET reviewTick = ? WHERE id = ?;");
+                    int newTick = studyCat.reviewTick + 1;
+                    int currentId = studyCat.id;
+                    ps.setInt(1, newTick);
+                    ps.setInt(2, currentId);
+                    ps.executeUpdate();
+
+                    PreparedStatement ps2 = conn.prepareStatement("UPDATE CatTracker SET lastReview = NOW() WHERE id = ?;");
+                    ps2.setInt(1, currentId);
+                    ps2.executeUpdate();
+
+                    System.out.println("congrats! your study count just went up.");
+                    return;
+                } 
+            }
+            System.out.println("that study cat doesn't exist in database.");
         }catch(SQLException e){
             e.printStackTrace();
         }

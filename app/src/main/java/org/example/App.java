@@ -8,10 +8,12 @@ import java.util.Scanner;
 
 public class App {
 
+    public static boolean appRun = true;
+
     public static void main(String[] args) {
         
         Scanner scanner = new Scanner(System.in);
-        boolean appRun = true;
+        
 
         while(appRun){
             ArrayList<TrackedCat> allTrackedCats = DAL.getTrackedCats();
@@ -27,11 +29,13 @@ public class App {
 
             System.out.println("enter 'A' to add new tracked study cat");
             System.out.println("enter 'R' to remove a study cat from tracking list");
+            System.out.println("enter 'T' to increase review tick (you just studied something)");
             String heroChoice = scanner.nextLine();
 
             switch (heroChoice.toUpperCase().strip()){
                 case "A" -> newTrackedCat(scanner);
                 case "R" -> minusTrackedCat(scanner);
+                case "T" -> increaseReviewTick(scanner);
                 default -> System.out.println("Invalid choice.\n");
             }
         }
@@ -49,5 +53,11 @@ public class App {
         System.out.println("Enter the name of the study cat you'd like to stop tracking: ");
          String removedCat = scanner.nextLine().strip();
          DAL.removeTrackedCat(removedCat, scanner);
+    }
+
+    public static void increaseReviewTick(Scanner scanner){
+        System.out.println("Enter the name of the study cat you just reviewd: ");
+        String reviewedCat = scanner.nextLine().strip();
+        DAL.reviewedTrackedCat(reviewedCat, scanner);
     }
 }
