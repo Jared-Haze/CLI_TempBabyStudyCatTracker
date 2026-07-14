@@ -16,7 +16,7 @@ public class App {
         while(appRun){
             ArrayList<TrackedCat> allTrackedCats = DAL.getTrackedCats();
 
-            System.out.println("---Tracked--Study--Cats------------------------------------");
+            System.out.println("\n---Tracked--Study--Cats------------------------------------");
 
             for(TrackedCat studyCat : allTrackedCats){
                 if(studyCat.reviewTick < 12){
@@ -26,10 +26,12 @@ public class App {
             System.out.println("-----------------------------------------------------------\n");
 
             System.out.println("enter 'A' to add new tracked study cat");
+            System.out.println("enter 'R' to remove a study cat from tracking list");
             String heroChoice = scanner.nextLine();
 
             switch (heroChoice.toUpperCase().strip()){
                 case "A" -> newTrackedCat(scanner);
+                case "R" -> minusTrackedCat(scanner);
                 default -> System.out.println("Invalid choice.\n");
             }
         }
@@ -41,5 +43,11 @@ public class App {
         System.out.print("Enter the name of the newly tracked Study Cat: ");
         String newTrackedCat = scanner.nextLine().strip();
         DAL.addTrackedCat(newTrackedCat);
+    }
+
+    public static void minusTrackedCat(Scanner scanner){
+        System.out.println("Enter the name of the study cat you'd like to stop tracking: ");
+         String removedCat = scanner.nextLine().strip();
+         DAL.removeTrackedCat(removedCat, scanner);
     }
 }
