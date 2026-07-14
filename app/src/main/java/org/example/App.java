@@ -30,12 +30,14 @@ public class App {
             System.out.println("enter 'A' to add new tracked study cat");
             System.out.println("enter 'R' to remove a study cat from tracking list");
             System.out.println("enter 'T' to increase review tick (you just studied something)");
+            System.out.println("enter 'Q' to quit program");
             String heroChoice = scanner.nextLine();
 
             switch (heroChoice.toUpperCase().strip()){
                 case "A" -> newTrackedCat(scanner);
                 case "R" -> minusTrackedCat(scanner);
                 case "T" -> increaseReviewTick(scanner);
+                case "Q" -> {System.out.println("ending program..."); System.exit(0);}
                 default -> System.out.println("Invalid choice.\n");
             }
         }
