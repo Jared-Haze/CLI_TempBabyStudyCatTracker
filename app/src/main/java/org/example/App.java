@@ -3,6 +3,7 @@
  */
 package org.example;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Scanner;
 
@@ -17,26 +18,44 @@ public class App {
 
         while(appRun){
             ArrayList<TrackedCat> allTrackedCats = DAL.getTrackedCats();
+            newDayCheck(allTrackedCats.get(0));
 
             System.out.println("\n---Tracked--Study--Cats------------------------------------");
 
             for(TrackedCat studyCat : allTrackedCats){
+                //prints active cats at the top
                 if(studyCat.reviewTick < 12){
+                    System.out.println(studyCat.getTrackedCat());
+                }
+            }
+            for(TrackedCat studyCat : allTrackedCats){
+                //prints completed cats (so you don't have to guess if you've made and studied a cat before)
+                if(studyCat.reviewTick >= 13){
+                    System.out.println(studyCat.getTrackedCat());
+                }
+            }
+            for(TrackedCat studyCat : allTrackedCats){
+                //prints initial finished cats at the bottom (forced spaced rep, break from)
+                if(studyCat.reviewTick == 12){
                     System.out.println(studyCat.getTrackedCat());
                 }
             }
             System.out.println("-----------------------------------------------------------\n");
 
-            System.out.println("enter 'A' to add new tracked study cat");
-            System.out.println("enter 'R' to remove a study cat from tracking list");
-            System.out.println("enter 'T' to increase review tick (you just studied something)");
-            System.out.println("enter 'Q' to quit program");
+            System.out.println("- enter 'A' to add new tracked study cat");
+            System.out.println("- enter 'R' to remove a study cat from tracking list");
+            System.out.println("- enter 'T' to increase review tick (you just studied something)");
+            System.out.println("- enter T- to decrease review tick (accidental add)");
+            System.out.println("- enter 'N' to reset the tracking of a study cat");
+            System.out.println("- enter 'Q' to quit program");
             String heroChoice = scanner.nextLine();
 
             switch (heroChoice.toUpperCase().strip()){
                 case "A" -> newTrackedCat(scanner);
                 case "R" -> minusTrackedCat(scanner);
                 case "T" -> increaseReviewTick(scanner);
+                case "T-" -> decreaseReviewTick(scanner);
+                case "N" -> resetTrackedCat(scanner);
                 case "Q" -> {System.out.println("ending program..."); System.exit(0);}
                 default -> System.out.println("Invalid choice.\n");
             }
@@ -61,5 +80,66 @@ public class App {
         System.out.println("Enter the name of the study cat you just reviewd: ");
         String reviewedCat = scanner.nextLine().strip();
         DAL.reviewedTrackedCat(reviewedCat, scanner);
+    }
+
+    public static void newDayCheck(TrackedCat randomCat){
+        LocalDate today = LocalDate.now();
+        LocalDate lastLogin = randomCat.priorLoginDate;
+
+        if(lastLogin == null){
+            System.out.println("temp fix");
+            return;
+        }
+
+        if(today.isAfter(lastLogin)){
+            DAL.resetDailyTicks();
+        }
+        DAL.resetLoginDate();
+    }
+
+    public static void decreaseReviewTick(Scanner scanner){
+        System.out.println("Enter the name of the study cat you'd like to decrease review count for: ");
+        String minusCat = scanner.nextLine().strip();
+
+        ArrayList<TrackedCat> allTrackedCats = DAL.getTrackedCats();
+        for(TrackedCat studyCat : allTrackedCats){
+            if(minusCat.equalsIgnoreCase(studyCat.studyCat)){
+                //dont allow completed study cats to be decreased (they must be reset)
+                if(studyCat.studyComplete != null){
+                    System.out.println("Cancelling operation... You must reset the study cat to decrease review ticks for [Completed] study cats");
+                    return;
+                }
+
+                if(studyCat.reviewTick == 0){
+                    System.out.println("Cancelling operation... You can't decrease what you haven't studied");
+                    return;
+                }
+                // DAL method
+                DAL.minusReview(studyCat);
+                return;
+            }
+        }
+        System.out.println("that study cat doesn't exist in database");
+    }
+
+    public static void resetTrackedCat(Scanner scanner){
+        System.out.println("Enter the name of the study cat you'd like to reset tracking on: ");
+        String resetCat = scanner.nextLine().strip();
+
+        ArrayList<TrackedCat> allTrackedCats = DAL.getTrackedCats();
+        for(TrackedCat studyCat : allTrackedCats){
+            if(resetCat.equalsIgnoreCase(studyCat.studyCat)){
+                System.out.print("are you sure you'd like to reset " + studyCat.studyCat + "? \nType 'reset' if certain: ");
+                String input = scanner.nextLine().strip();
+                if(input.equalsIgnoreCase("reset")){
+                    DAL.resetCatTracking(studyCat);
+                    return;
+                } else {
+                    System.out.println("seems like you've changed your mind");
+                    return;
+                }
+            }
+        }
+        System.out.println("that study cat doesn't exist in database");
     }
 }

@@ -1,5 +1,6 @@
 package org.example;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 public class TrackedCat {
@@ -10,8 +11,10 @@ public class TrackedCat {
     LocalDateTime lastReview;
     LocalDateTime initialFinish;
     LocalDateTime studyComplete;
+    int dailyTickCount;
+    LocalDate priorLoginDate;
 
-    TrackedCat(int id, String studyCat, LocalDateTime studyStart, int reviewTick, LocalDateTime lastReview, LocalDateTime initialFinish, LocalDateTime studyComplete){
+    TrackedCat(int id, String studyCat, LocalDateTime studyStart, int reviewTick, LocalDateTime lastReview, LocalDateTime initialFinish, LocalDateTime studyComplete, int dailyTickCount, LocalDate priorLoginDate){
         this.id = id;
         this.studyCat = studyCat;
         this.studyStart = studyStart;
@@ -19,18 +22,20 @@ public class TrackedCat {
         this.lastReview = lastReview;
         this.initialFinish = initialFinish;
         this.studyComplete = studyComplete;
+        this.dailyTickCount = dailyTickCount;
+        this.priorLoginDate = priorLoginDate;
     }
 
     public String getTrackedCat() {
         String reviewStatus;
         if(studyComplete != null){
-            reviewStatus = "completed";
+            reviewStatus = "[Completed]";
         } else if(initialFinish != null){
-            reviewStatus = "initial finish";
+            reviewStatus = "[Initial Finish]";
         } else {
-            reviewStatus = String.valueOf(reviewTick);
+            reviewStatus = String.valueOf(reviewTick) + " [Active]";
         }
-        String trackedCatString = studyCat + " | " + reviewStatus + " | last reviewed: " + lastReview; //HashMap methods | 1 review/initial finish/completed | last reviewed: 7/13/26
+        String trackedCatString = studyCat + " | total studied: " + reviewStatus + " | times studied today: " + dailyTickCount + " | last reviewed: " + lastReview; //HashMap methods | 1 review/initial finish/completed | last reviewed: 7/13/26
         return trackedCatString;
     }
 }
