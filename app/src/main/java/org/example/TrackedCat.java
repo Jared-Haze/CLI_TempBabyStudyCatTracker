@@ -13,8 +13,9 @@ public class TrackedCat {
     LocalDateTime studyComplete;
     int dailyTickCount;
     LocalDate priorLoginDate;
+    Boolean tempQuitCheck;
 
-    TrackedCat(int id, String studyCat, LocalDateTime studyStart, int reviewTick, LocalDateTime lastReview, LocalDateTime initialFinish, LocalDateTime studyComplete, int dailyTickCount, LocalDate priorLoginDate){
+    TrackedCat(int id, String studyCat, LocalDateTime studyStart, int reviewTick, LocalDateTime lastReview, LocalDateTime initialFinish, LocalDateTime studyComplete, int dailyTickCount, LocalDate priorLoginDate, Boolean tempQuitCheck){
         this.id = id;
         this.studyCat = studyCat;
         this.studyStart = studyStart;
@@ -24,6 +25,7 @@ public class TrackedCat {
         this.studyComplete = studyComplete;
         this.dailyTickCount = dailyTickCount;
         this.priorLoginDate = priorLoginDate;
+        this.tempQuitCheck = tempQuitCheck;
     }
 
     public String getTrackedCat() {

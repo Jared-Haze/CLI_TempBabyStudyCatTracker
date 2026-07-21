@@ -30,7 +30,7 @@ public class DAL {
                 java.sql.Date sqlDate = rs.getDate("priorLoginDate");
                 LocalDate priorLoginDate = (sqlDate == null) ? null : sqlDate.toLocalDate();
 
-                trackedStudyCat = new TrackedCat(rs.getInt("id"), rs.getString("studyCat"), rs.getTimestamp("studyStart").toLocalDateTime(), rs.getInt("reviewTick"), rs.getTimestamp("lastReview").toLocalDateTime(), initialFinish, studyComplete, rs.getInt("dailyTickCount"), priorLoginDate);
+                trackedStudyCat = new TrackedCat(rs.getInt("id"), rs.getString("studyCat"), rs.getTimestamp("studyStart").toLocalDateTime(), rs.getInt("reviewTick"), rs.getTimestamp("lastReview").toLocalDateTime(), initialFinish, studyComplete, rs.getInt("dailyTickCount"), priorLoginDate, rs.getBoolean("tempQuit"));
                 allTrackedCats.add(trackedStudyCat);
             }
         }catch(SQLException e){
@@ -41,7 +41,7 @@ public class DAL {
 
     public static void addTrackedCat(String studyCat){
         try(Connection conn = JDBC.getConnection()){
-            PreparedStatement ps = conn.prepareStatement("INSERT INTO CatTracker (studyCat, studyStart, reviewTick, lastReview, dailyTickCount, priorLoginDate) VALUES (?, NOW(), 0, NOW(), 0, NOW());");
+            PreparedStatement ps = conn.prepareStatement("INSERT INTO CatTracker (studyCat, studyStart, reviewTick, lastReview, dailyTickCount, priorLoginDate, tempQuit) VALUES (?, NOW(), 0, NOW(), 0, NOW(), false);");
 
             ps.setString(1, studyCat);
             ps.executeUpdate();
@@ -153,7 +153,7 @@ public class DAL {
     public static void minusReview(TrackedCat currentCat){
 
         int newTick = currentCat.reviewTick - 1;
-        int dailyTick = currentCat.dailyTickCount - 1;
+        int dailyTick = (currentCat.dailyTickCount >= 0) ? 0 : currentCat.dailyTickCount - 1;
         int currentId = currentCat.id;
         //decrease reviewTick
         try(Connection conn = JDBC.getConnection()){
@@ -162,11 +162,30 @@ public class DAL {
             ps.setInt(2, dailyTick);
             ps.setInt(3, currentId);
             ps.executeUpdate();
+
         }catch(SQLException e){
             e.printStackTrace();
         }
-        //set studyInitialFinish back to null (always)
-        //decrease dailyTickCount (so mistaken tick increases don't take away from daily allotment
+    }
+
+    public static void tempQuitBool(TrackedCat currentCat){
+        int currentId = currentCat.id;
+        try(Connection conn = JDBC.getConnection()){
+            PreparedStatement ps = conn.prepareStatement("UPDATE CatTracker SET tempQuit = true WHERE id = ?;");
+            ps.setInt(1, currentId);
+            ps.executeUpdate();
+        }catch(SQLException e){
+            e.printStackTrace();
+        }
+    }
+
+    public static void tempQuitReset(){
+        try(Connection conn = JDBC.getConnection()){
+            PreparedStatement ps = conn.prepareStatement("UPDATE CatTracker SET tempQuit = false;");
+            ps.executeUpdate();
+        }catch(SQLException e){
+            e.printStackTrace();
+        }
     }
 
     public static void resetCatTracking(TrackedCat currentCat){

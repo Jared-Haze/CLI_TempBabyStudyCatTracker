@@ -4,6 +4,7 @@
 package org.example;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Scanner;
 
@@ -91,10 +92,19 @@ public class App {
             return;
         }
 
+        //if new day⤵️
         if(today.isAfter(lastLogin)){
             DAL.resetDailyTicks();
+
+            //DAL set tempQuit booleans all to false
+            DAL.tempQuitReset();
+
+            //minus review tick for if you haven't reviewed in over 3 days (- another each day after).
+            tempQuitCheck();
+
+            //always update login date to today after⤵️
+            DAL.resetLoginDate();
         }
-        DAL.resetLoginDate();
     }
 
     public static void decreaseReviewTick(Scanner scanner){
@@ -141,5 +151,21 @@ public class App {
             }
         }
         System.out.println("that study cat doesn't exist in database");
+    }
+
+    public static void tempQuitCheck(){
+        ArrayList<TrackedCat> allTrackedCats = DAL.getTrackedCats();
+        for(TrackedCat studyCat : allTrackedCats){
+            if(studyCat.studyComplete != null){continue;}
+            if(studyCat.tempQuitCheck == false){
+                if(studyCat.lastReview != null && studyCat.lastReview.isBefore(LocalDateTime.now().minusDays(3))){
+                    System.out.println(studyCat + "hasn't been reviewed for 3 or more days. Removing a reviewTick.");
+                    //DAL minus 1 reviewTick
+                    DAL.minusReview(studyCat);
+                    //DAL change tempQuit boolean to true
+                    DAL.tempQuitBool(studyCat);
+                }
+            }
+        }
     }
 }
