@@ -20,8 +20,27 @@ public class App {
         while(appRun){
             ArrayList<TrackedCat> allTrackedCats = DAL.getTrackedCats();
             newDayCheck(allTrackedCats.get(0));
+            ArrayList<userNPCs> users = DAL.getUserNPCs();
+
+            System.out.println("\n---Users---------------------------------------------------");
+
+            for(userNPCs user : users){
+                System.out.println(user.getUNPC());
+            }
+
+            System.out.println("-----------------------------------------------------------");
+
+            
 
             System.out.println("\n---Tracked--Study--Cats------------------------------------");
+
+            for(TrackedCat studyCat : allTrackedCats){
+                //prints initial finished cats at the bottom (forced spaced rep, break from)
+                LocalDate today = LocalDate.now();
+                if(studyCat.reviewTick == 12 && today.isAfter(studyCat.initialFinish.toLocalDate().plusDays(2))){
+                    System.out.println(studyCat.getTrackedCat() + " {ready to complete!}");
+                }
+            }
 
             for(TrackedCat studyCat : allTrackedCats){
                 //prints active cats at the top
@@ -37,7 +56,8 @@ public class App {
             }
             for(TrackedCat studyCat : allTrackedCats){
                 //prints initial finished cats at the bottom (forced spaced rep, break from)
-                if(studyCat.reviewTick == 12){
+                LocalDate today = LocalDate.now();
+                if(studyCat.reviewTick == 12 && today.isBefore(studyCat.initialFinish.toLocalDate().plusDays(2))){
                     System.out.println(studyCat.getTrackedCat());
                 }
             }
@@ -46,7 +66,7 @@ public class App {
             System.out.println("- enter 'A' to add new tracked study cat");
             System.out.println("- enter 'R' to remove a study cat from tracking list");
             System.out.println("- enter 'T' to increase review tick (you just studied something)");
-            System.out.println("- enter T- to decrease review tick (accidental add)");
+            System.out.println("- enter 'T-' to decrease review tick (accidental add)");
             System.out.println("- enter 'N' to reset the tracking of a study cat");
             System.out.println("- enter 'Q' to quit program");
             String heroChoice = scanner.nextLine();
@@ -104,6 +124,8 @@ public class App {
 
             //always update login date to today after⤵️
             DAL.resetLoginDate();
+
+            DAL.VBLvlUp();
         }
     }
 
